@@ -10,19 +10,13 @@ I built this as a working prototype for the Podman LFX mentorship proposal ([pod
 
 ## Architecture
 
-<p align="center">
-  <img src="assets/architecture.jpg" alt="CI Flake Agent Architecture" width="800"/>
-</p>
-
-```
-┌─────────────────┐     ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-│  GitHub Actions  │────▶│  Log Ingestion   │────▶│   LLM Analysis   │────▶│ Report Generator │
-│  Workflow Runs   │     │  fetch_logs.py   │     │   analyze.py     │     │   report.py      │
-│                  │     │                  │     │                  │     │                  │
-│ • Failed runs    │ API │ • Download zips  │     │ • Smart truncate │     │ • Markdown table │
-│ • Retry data     │────▶│ • Strip noise    │────▶│ • Ollama / LLM   │────▶│ • Issue draft    │
-│ • Commit SHAs    │     │ • Flake detect   │     │ • Strict JSON    │     │ • API posting    │
-└─────────────────┘     └──────────────────┘     └──────────────────┘     └──────────────────┘
+```mermaid
+graph TD
+    A[GitHub Actions Workflow Failure] -->|GitHub REST API| B[src/fetch_logs.py]
+    B -->|Raw CI Run Logs| C[src/analyze.py]
+    C -->|LLM Prompting & Reasoning| D[Categorized Flake Analysis]
+    D -->|src/report.py| E[Markdown Report / Issue Draft]
+    E -->|Output| F[reports/sample_report.md]
 ```
 
 ### Pipeline Flow
@@ -32,20 +26,6 @@ I built this as a working prototype for the Podman LFX mentorship proposal ([pod
 | **1. Ingestion** | `src/fetch_logs.py` | Calls GitHub REST API to list failed runs, download log archives, extract failing step text, strip timestamps/ANSI noise, and detect flaky commits (same SHA with both pass + fail) |
 | **2. Analysis** | `src/analyze.py` | Smart-truncates logs for LLM context windows, queries local Ollama AI (or heuristic fallback), outputs strict JSON with category, confidence, explanation, and mitigation |
 | **3. Reporting** | `src/report.py` | Generates Markdown flake report with summary table, detailed root cause breakdown, and ready-to-paste GitHub Issue draft. Optional `--post` flag to auto-comment on issues via API |
-
----
-
-## Screenshots
-
-### Failed GitHub Actions Run → Generated Flake Report
-
-<p align="center">
-  <img src="assets/failed_run.jpg" alt="Failed CI Run" width="420"/>
-  &nbsp;&nbsp;
-  <img src="assets/generated_report.jpg" alt="Generated Flake Report" width="420"/>
-</p>
-
-<p align="center"><em>Left: A flaky test failure in GitHub Actions &nbsp;|&nbsp; Right: Auto-generated analysis report with category, confidence, and mitigation</em></p>
 
 ---
 
@@ -66,7 +46,6 @@ ci-flake-agent/
 ├── logs/                              # Ingested & cleaned CI run logs
 │   ├── podman/                        # Real-world podman failure logs
 │   └── *.txt                          # Extracted step logs from ci-flake-agent runs
-├── assets/                            # README images & diagrams
 ├── requirements.txt                   # Python dependencies
 └── README.md                          # This file
 ```
@@ -302,7 +281,7 @@ The included `.github/workflows/flaky-demo.yml` runs [`src/flaky_runner.py`](src
 
 ---
 
-## 🌍 Tested on Real-World Data
+## Tested on Real-World Data
 
 This tool has been validated against real CI failures from:
 
