@@ -1,0 +1,18 @@
+##[group]Run python src/flaky_runner.py
+python src/flaky_runner.py
+shell: /usr/bin/bash -e {0}
+env:
+pythonLocation: /opt/hostedtoolcache/Python/3.11.15/x64
+PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.15/x64/lib/pkgconfig
+Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.15/x64/lib
+##[endgroup]
+=== Flaky Test Suite Execution ===
+Running test_payment_service.py ...
+[INFO] Executing test_large_batch_export...
+Fatal Python error: Out of memory (OOM)
+[ERROR] MemoryError: Unable to allocate 4.12 GiB for array with shape (50000, 50000) and data type float64
+Process terminated by SIGKILL (Exit code 137 / Out Of Memory)
+##[error]Process completed with exit code 1.

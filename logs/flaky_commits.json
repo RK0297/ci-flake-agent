@@ -1,0 +1,25 @@
+{
+  "repository": "RK0297/ci-flake-agent",
+  "total_commits_evaluated": 14,
+  "flaky_commits_count": 1,
+  "flaky_commits": [
+    {
+      "workflow_name": "Flaky Test Demo Workflow",
+      "commit_sha": "c4c7a0a",
+      "full_sha": "c4c7a0ae70ef0181f045630b68b9772d0f8dd7a1",
+      "commit_message": "ci: trigger run 12",
+      "flaky_reason": "Same commit has both PASS and FAIL runs",
+      "failed_runs": [
+        30700965866,
+        30700964198,
+        30700962538,
+        30700887008
+      ],
+      "passed_runs": [
+        30700965006,
+        30700963283
+      ],
+      "total_attempts": 6
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+##[group]Run python src/flaky_runner.py
+python src/flaky_runner.py
+shell: /usr/bin/bash -e {0}
+env:
+pythonLocation: /opt/hostedtoolcache/Python/3.11.15/x64
+PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.15/x64/lib/pkgconfig
+Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.15/x64/lib
+##[endgroup]
+=== Flaky Test Suite Execution ===
+Running test_payment_service.py ...
+[INFO] Executing test_concurrent_balance_update...
+[ERROR] AssertionError: Race condition detected in shared state. Expected balance 100, found 91
+Traceback (most recent call last):
+File "tests/test_payment.py", line 112, in test_concurrent_balance_update
+assert balance == 100, f'Expected 100, got 91'
+[FAIL] test_concurrent_balance_update FAILED
+##[error]Process completed with exit code 1.
