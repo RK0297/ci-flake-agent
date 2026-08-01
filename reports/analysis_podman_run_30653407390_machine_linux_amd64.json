@@ -1,0 +1,7 @@
+{
+  "category": "infra_failure",
+  "confidence": 0.95,
+  "explanation": "Network connection refused or target external service endpoint was unreachable.",
+  "suggested_mitigation": "Verify network routing, use a mock server fixture, or add automatic network retries.",
+  "input_log": "podman_run_30653407390_machine_linux_amd64.txt"
+}

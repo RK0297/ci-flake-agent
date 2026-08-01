@@ -1,0 +1,43 @@
+=== GitHub Actions CI Failure Log ===
+Repository: containers/podman
+Workflow: ci
+Run: #1170 (ID: 30679400599)
+Commit SHA: a7c5b1e9e0f8cffb24c533d059736f85f9034bc2
+Triggered: 2026-08-01T02:08:25Z
+URL: https://github.com/podman-container-tools/podman/actions/runs/30679400599
+
+--- Job: windows machine hyperv ---
+Runner: GitHub Actions 1063816644 (windows-2025-vs2026)
+Started: 2026-08-01T02:18:26Z
+Completed: 2026-08-01T03:10:30Z
+Conclusion: FAILURE
+
+--- Step Execution Summary ---
+[PASS] Set up job
+[PASS] Configure git line endings
+[PASS] Checkout
+[PASS] Set up Go
+[PASS] Diagnostics
+[PASS] Build podman
+[PASS] Fetch gvproxy
+[SKIPPED] WSL info
+[PASS] Uninstall WSL
+[PASS] Configure container policy
+[SKIPPED] Firewall Rule
+[FAIL] Run machine e2e
+[SKIPPED] Post Set up Go
+[PASS] Post Checkout
+[PASS] Complete job
+
+--- FAILED STEP: Run machine e2e ---
+Status: completed
+Conclusion: failure
+Started: 2026-08-01T02:19:52Z
+Completed: 2026-08-01T03:10:23Z
+
+--- Error Context ---
+[ERROR] Machine test e2e failure in windows machine hyperv
+[ERROR] Podman machine test suite failed during execution
+[ERROR] Hyper-V virtualization backend encountered connection timeout
+[ERROR] TimeoutError: VM failed to respond within expected window
+##[error]Process completed with exit code 1.

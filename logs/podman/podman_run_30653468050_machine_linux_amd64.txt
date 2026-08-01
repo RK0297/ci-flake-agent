@@ -1,0 +1,34 @@
+=== GitHub Actions CI Failure Log ===
+Repository: containers/podman
+Workflow: ci
+Run: #1169 (ID: 30653468050)
+Commit SHA: 5337a3bd51ecbc8de4220791153a5642c6690712
+Triggered: 2026-07-31T18:00:54Z
+URL: https://github.com/podman-container-tools/podman/actions/runs/30653468050
+
+--- Job: machine linux amd64 ---
+Runner: cncf-ubuntu-24-96-x86-ctj6x-runner-zjzrx (cncf-ubuntu-24-96-x86)
+Started: 2026-07-31T18:16:40Z
+Completed: 2026-07-31T18:37:41Z
+Conclusion: FAILURE
+
+--- Step Execution Summary ---
+[PASS] Set up job
+[PASS] Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+[PASS] Run actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e
+[PASS] Install gvproxy
+[PASS] Install dependencies
+[PASS] Configure registries.conf
+[PASS] Fix kvm permissions
+[PASS] Build podman-remote
+[PENDING] Run machine tests
+[PENDING] Post Run actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e
+[PENDING] Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+
+--- Error Context ---
+[ERROR] Machine test e2e failure in machine linux amd64
+[ERROR] Podman machine test suite failed during execution
+[ERROR] QEMU backend machine initialization failure
+[ERROR] ConnectionError: Failed to establish SSH tunnel to podman machine
+##[error]Process completed with exit code 1.
