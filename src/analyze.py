@@ -107,7 +107,7 @@ def call_ollama(log_snippet: str, model: str = None) -> dict:
             if r.status_code == 200:
                 models = [m['name'] for m in r.json().get('models', [])]
                 if models:
-                    selected_model = models[0] # Use first installed model (e.g., gemma3:1b / gemma-finetuned)
+                    selected_model = models[0] # Use first available installed model
         except Exception:
             pass
 

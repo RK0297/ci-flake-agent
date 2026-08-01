@@ -1,4 +1,6 @@
-# 🔍 ci-flake-agent
+# ci-flake-agent
+
+I built this as a working prototype for the Podman LFX mentorship proposal ([podman-container-tools/podman#29265](https://github.com/podman-container-tools/podman/issues/29265)) — to test whether an LLM agent can usefully categorize real CI flakes.
 
 > **AI-powered CI/CD Flaky Test Analyzer.** Automatically ingest GitHub Actions workflow logs, detect non-deterministic failures, analyze root causes using Local AI (Ollama) or heuristic engines, and generate structured Markdown reports with ready-to-post GitHub Issue drafts.
 
@@ -6,7 +8,7 @@
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 <p align="center">
   <img src="assets/architecture.jpg" alt="CI Flake Agent Architecture" width="800"/>
@@ -33,7 +35,7 @@
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 ### Failed GitHub Actions Run → Generated Flake Report
 
@@ -47,7 +49,7 @@
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```text
 ci-flake-agent/
@@ -59,10 +61,10 @@ ci-flake-agent/
 │   └── report.py                      # Markdown report & issue draft generator
 ├── reports/                           # Generated sample reports & batch JSON analysis
 │   ├── sample_report.md               # Full batch report (ci-flake-agent's own runs)
-│   ├── podman_flake_report.md         # Real-world containers/podman analysis
+│   ├── podman_flake_report.md         # Real-world podman-container-tools/podman analysis
 │   └── *.json                         # Per-run analysis JSON outputs
 ├── logs/                              # Ingested & cleaned CI run logs
-│   ├── podman/                        # Real-world containers/podman failure logs
+│   ├── podman/                        # Real-world podman failure logs
 │   └── *.txt                          # Extracted step logs from ci-flake-agent runs
 ├── assets/                            # README images & diagrams
 ├── requirements.txt                   # Python dependencies
@@ -71,7 +73,7 @@ ci-flake-agent/
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Installation
 
@@ -110,7 +112,7 @@ python src/report.py --input reports/batch_analysis.json --output reports/flake_
 
 ---
 
-## 📄 Output Schema
+## Output Schema
 
 `src/analyze.py` produces strict JSON with exactly one of four categories:
 
@@ -132,7 +134,7 @@ python src/report.py --input reports/batch_analysis.json --output reports/flake_
 
 ---
 
-## 🧠 Context-Window Handling & Smart Log Truncation
+## Context-Window Handling & Smart Log Truncation
 
 Raw CI/CD build logs can be tens of thousands of lines long. Feeding them directly to an LLM wastes context tokens on noise. `src/analyze.py` implements **Smart Log Truncation** to maximize signal density:
 
@@ -162,7 +164,7 @@ This approach:
 
 ---
 
-## 🎛️ How to Tweak the Prompts
+## How to Tweak the Prompts
 
 The LLM categorization prompt is the core of the analysis engine. You can customize it to match your project's failure taxonomy, coding standards, or domain-specific error patterns.
 
@@ -251,7 +253,7 @@ def smart_truncate_log(log_text, head_lines=30, tail_lines=200):
     # Error context: 5 lines before + 10 lines after each error signal
 ```
 
-For very verbose test runners (e.g., Jest with `--verbose`), increase `tail_lines` to 400.  
+For very verbose test runners (e.g., Jest with `--verbose`), increase `tail_lines` to 400.
 For terse runners (e.g., Go `testing`), reduce `head_lines` to 10.
 
 #### 5. Switch LLM Provider
@@ -271,7 +273,7 @@ python src/analyze.py --input logs --provider heuristic
 
 ---
 
-## ⚡ Flake Detection Logic
+## Flake Detection Logic
 
 The `detect_flaky_runs()` function in `fetch_logs.py` identifies non-deterministic failures:
 
@@ -287,7 +289,7 @@ This is the key insight: **if the same code passes and fails on the same commit,
 
 ---
 
-## 🧪 Flaky Test Demo Workflow
+## Flaky Test Demo Workflow
 
 The included `.github/workflows/flaky-demo.yml` runs [`src/flaky_runner.py`](src/flaky_runner.py), which simulates 4 realistic failure modes with a 40% failure probability:
 
@@ -304,10 +306,20 @@ The included `.github/workflows/flaky-demo.yml` runs [`src/flaky_runner.py`](src
 
 This tool has been validated against real CI failures from:
 
-- **[`containers/podman`](https://github.com/containers/podman)** — Analyzed `windows machine hyperv` timeout failures and `machine linux amd64` infra failures from their CI pipeline. Sample reports are committed in [`reports/`](reports/).
+- **[`podman-container-tools/podman`](https://github.com/podman-container-tools/podman)** — Analyzed `windows machine hyperv` timeout failures and `machine linux amd64` infra failures from their CI pipeline. Sample reports are committed in [`reports/`](reports/).
 
 ---
 
-## 📄 License
+## Limitations & Next Steps
 
-MIT
+This is a prototype. There are clear gaps I'd want to close during the mentorship:
+
+- **Small local models limit accuracy.** Running `gemma3:1b` locally is fast and private, but it frequently fails to produce valid JSON and falls back to heuristic rules. A larger model (or fine-tuning on real Podman CI logs) would meaningfully improve categorization quality.
+- **No historical flake-rate tracking.** Right now each run is analyzed in isolation. Tracking failure frequency per test name over time (e.g., "this test has failed 7 of its last 20 runs") would make the reports far more actionable for maintainers.
+- **Reporting could post PR comments automatically.** The `--post` flag works for issues, but the real workflow is commenting directly on the PR that triggered the flaky run, with a link to the analysis. That integration isn't wired up yet.
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE).
