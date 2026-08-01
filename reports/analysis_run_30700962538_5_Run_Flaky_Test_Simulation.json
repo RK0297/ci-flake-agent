@@ -1,0 +1,7 @@
+{
+  "category": "real_bug",
+  "confidence": 0.94,
+  "explanation": "Out of Memory (OOM) error or process termination caused by excessive resource allocation.",
+  "suggested_mitigation": "Optimize array memory allocations, increase runner RAM limits, or profile memory usage.",
+  "input_log": "run_30700962538_5_Run_Flaky_Test_Simulation.txt"
+}

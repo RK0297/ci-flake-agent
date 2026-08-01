@@ -1,0 +1,7 @@
+{
+  "category": "race_condition",
+  "confidence": 0.89,
+  "explanation": "Non-deterministic state mismatch detected across concurrent worker threads.",
+  "suggested_mitigation": "Isolate shared state variables, use mutex locks, or execute test suite with atomic fixtures.",
+  "input_log": "run_30700964198_5_Run_Flaky_Test_Simulation.txt"
+}

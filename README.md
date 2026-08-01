@@ -13,18 +13,29 @@ graph TD
     E -->|Output| F[reports/sample_report.md]
 ```
 
+## 🧠 Context-Window Handling & Smart Log Truncation
+
+Raw CI/CD build logs frequently exceed tens of thousands of lines, consuming excessive LLM token context windows. `src/analyze.py` implements **Smart Log Truncation**:
+
+- **Environment Context**: Retains the first ~30 lines of step execution (environment variables, dependency versions, test runner startup).
+- **Error Signal Extraction**: Regex-scans full log output for failure triggers (`ERROR`, `FAIL`, `Traceback`, `Exception`, `Timeout`, `OOM`, `ConnectionRefused`). Automatically extracts a window around every detected error (5 lines before + 10 lines after).
+- **Execution Tail**: Retains the last ~200 lines (final stack traces, teardown logs, exit status).
+- **Compact Assembly**: Merges non-overlapping line ranges into a dense prompt payload while annotating truncated sections (`... [truncated N lines] ...`).
+
 ## 📁 Repository Structure
 
 ```text
 ci-flake-agent/
 ├── .github/workflows/flaky-demo.yml   # Generates realistic flaky test failure samples
 ├── src/
-│   ├── fetch_logs.py                  # GitHub API log ingestion module
-│   ├── analyze.py                     # LLM failure categorization module
+│   ├── fetch_logs.py                  # GitHub API log ingestion & flake detector
+│   ├── analyze.py                     # LLM failure categorization & smart log truncation
+│   ├── flaky_runner.py                # Flaky test suite simulator (4 failure modes)
 │   └── report.py                      # Markdown report & issue draft generator
-├── reports/                           # Generated sample reports & outputs
+├── reports/                           # Generated sample reports & batch JSON analysis
+├── logs/                              # Ingested & cleaned CI run logs
 ├── requirements.txt                   # Python dependencies
-└── README.md                          # Project overview & documentation
+└── README.md                          # Architecture & documentation
 ```
 
 ## 🚀 Quick Start
@@ -37,35 +48,35 @@ cd ci-flake-agent
 pip install -r requirements.txt
 ```
 
-### 2. Environment Configuration
+### 2. Usage Workflow
 
-Set your environment variables in `.env` or your environment:
-
+#### Step 1: Fetch Logs & Detect Flaky Runs
 ```bash
-export GITHUB_TOKEN="your_github_token"
-export GEMINI_API_KEY="your_gemini_api_key"  # or OPENAI_API_KEY
+python src/fetch_logs.py --repo RK0297/ci-flake-agent --detect-flaky --download-failed --output-dir logs
 ```
 
-### 3. Usage
-
-#### Step 1: Fetch Logs from GitHub Workflow Run
+#### Step 2: Analyze Logs with LLM (or Local Ollama / Heuristic Fallback)
 ```bash
-python src/fetch_logs.py --repo owner/repo --run-id 12345678 --output logs.txt
+python src/analyze.py --input logs --output reports
 ```
 
-#### Step 2: Analyze Logs with LLM
+#### Step 3: Generate Flake Report / GitHub Issue Draft
 ```bash
-python src/analyze.py --input logs.txt --output analysis.json
+python src/report.py --input reports/batch_analysis.json --output reports/sample_report.md
 ```
 
-#### Step 3: Generate Flake Report
-```bash
-python src/report.py --input analysis.json --output reports/sample_report.md
+## 📄 Output Schema (`src/analyze.py`)
+
+Produces strict JSON categorized into `race_condition`, `network_timeout`, `infra_failure`, or `real_bug`:
+
+```json
+{
+  "category": "race_condition",
+  "confidence": 0.89,
+  "explanation": "Non-deterministic state mismatch detected across concurrent worker threads.",
+  "suggested_mitigation": "Isolate shared state variables, use mutex locks, or execute test suite with atomic fixtures."
+}
 ```
-
-## 🧪 Flaky Test Demo Workflow
-
-The included `.github/workflows/flaky-demo.yml` runs a simulated test suite with non-deterministic race conditions and network timeout simulations to demonstrate automated log ingestion and flake detection.
 
 ## 📄 License
 

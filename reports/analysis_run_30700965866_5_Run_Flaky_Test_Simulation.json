@@ -1,0 +1,7 @@
+{
+  "category": "network_timeout",
+  "confidence": 0.92,
+  "explanation": "Operation timed out waiting for lock release or network response within threshold.",
+  "suggested_mitigation": "Increase async timeout threshold or implement exponential backoff retry policy.",
+  "input_log": "run_30700965866_5_Run_Flaky_Test_Simulation.txt"
+}

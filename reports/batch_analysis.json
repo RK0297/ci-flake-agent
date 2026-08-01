@@ -1,0 +1,58 @@
+[
+  {
+    "category": "infra_failure",
+    "confidence": 0.95,
+    "explanation": "Network connection refused or target external service endpoint was unreachable.",
+    "suggested_mitigation": "Verify network routing, use a mock server fixture, or add automatic network retries.",
+    "input_log": "run_30700862424_5_Run_Flaky_Test_Simulation.txt"
+  },
+  {
+    "category": "infra_failure",
+    "confidence": 0.95,
+    "explanation": "Network connection refused or target external service endpoint was unreachable.",
+    "suggested_mitigation": "Verify network routing, use a mock server fixture, or add automatic network retries.",
+    "input_log": "run_30700873187_5_Run_Flaky_Test_Simulation.txt"
+  },
+  {
+    "category": "network_timeout",
+    "confidence": 0.92,
+    "explanation": "Operation timed out waiting for lock release or network response within threshold.",
+    "suggested_mitigation": "Increase async timeout threshold or implement exponential backoff retry policy.",
+    "input_log": "run_30700883072_5_Run_Flaky_Test_Simulation.txt"
+  },
+  {
+    "category": "network_timeout",
+    "confidence": 0.92,
+    "explanation": "Operation timed out waiting for lock release or network response within threshold.",
+    "suggested_mitigation": "Increase async timeout threshold or implement exponential backoff retry policy.",
+    "input_log": "run_30700884883_5_Run_Flaky_Test_Simulation.txt"
+  },
+  {
+    "category": "infra_failure",
+    "confidence": 0.95,
+    "explanation": "Network connection refused or target external service endpoint was unreachable.",
+    "suggested_mitigation": "Verify network routing, use a mock server fixture, or add automatic network retries.",
+    "input_log": "run_30700887008_5_Run_Flaky_Test_Simulation.txt"
+  },
+  {
+    "category": "real_bug",
+    "confidence": 0.94,
+    "explanation": "Out of Memory (OOM) error or process termination caused by excessive resource allocation.",
+    "suggested_mitigation": "Optimize array memory allocations, increase runner RAM limits, or profile memory usage.",
+    "input_log": "run_30700962538_5_Run_Flaky_Test_Simulation.txt"
+  },
+  {
+    "category": "race_condition",
+    "confidence": 0.89,
+    "explanation": "Non-deterministic state mismatch detected across concurrent worker threads.",
+    "suggested_mitigation": "Isolate shared state variables, use mutex locks, or execute test suite with atomic fixtures.",
+    "input_log": "run_30700964198_5_Run_Flaky_Test_Simulation.txt"
+  },
+  {
+    "category": "network_timeout",
+    "confidence": 0.92,
+    "explanation": "Operation timed out waiting for lock release or network response within threshold.",
+    "suggested_mitigation": "Increase async timeout threshold or implement exponential backoff retry policy.",
+    "input_log": "run_30700965866_5_Run_Flaky_Test_Simulation.txt"
+  }
+]
