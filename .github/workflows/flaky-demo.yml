@@ -1,0 +1,46 @@
+name: Flaky Test Demo Workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  run-flaky-tests:
+    name: Run Flaky Test Suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run Flaky Test Simulation
+        run: |
+          python -c "
+          import random, sys, time
+          print('[INFO] Starting suite: test_payment_gateway.py')
+          print('[INFO] Executing test_checkout_idempotency...')
+          time.sleep(0.5)
+          print('[INFO] Executing test_async_webhook_receipt...')
+          
+          # Simulate non-deterministic timing / network timeout failure
+          if random.random() < 0.7:
+              print('[ERROR] TimeoutError: Webhook response not received within 5000ms threshold')
+              print('[ERROR] Stack trace:\n  File \"tests/test_payment.py\", line 42, in test_async_webhook_receipt\n    assert response.status_code == 200')
+              print('[FAIL] test_async_webhook_receipt failed (Flake Probability: High)')
+              sys.exit(1)
+          else:
+              print('[PASS] test_async_webhook_receipt passed')
+          "
